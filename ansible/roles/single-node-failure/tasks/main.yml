@@ -1,0 +1,58 @@
+---
+
+- name: start a session on port {{ container_port }} and set a replicate-test = yeap in the session
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/?replicate-test=yeap"
+    HEADER_Cookie: "PHPSESSID={{ session_id }}"
+
+- name: stop the replicate node for this session
+  docker_container:
+    name: "pocphpmemcachedsessions-{{ replicate_node }}"
+    state: stopped
+
+- name: assert that the session contains the replicate-test = yeap content
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/"
+    return_content: true
+    HEADER_Cookie: "PHPSESSID={{ session_id }}"
+  register: state
+  failed_when: "'replicate-test = yeap' not in state.content"
+
+- name: start the replicate node for this session again
+  docker_container:
+    name: "pocphpmemcachedsessions-{{ replicate_node }}"
+    state: started
+
+- name: assert that the session contains the replicate-test = yeap content
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/"
+    return_content: true
+    HEADER_Cookie: "PHPSESSID={{ session_id }}"
+  register: state
+  failed_when: "'replicate-test = yeap' not in state.content"
+
+- name: stop the primary node for this session
+  docker_container:
+    name: "pocphpmemcachedsessions-{{ primary_node }}"
+    state: stopped
+
+- name: assert that the session contains the replicate-test = yeap content
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/"
+    return_content: true
+    HEADER_Cookie: "PHPSESSID={{ session_id }}"
+  register: state
+  failed_when: "'replicate-test = yeap' not in state.content"
+
+- name: start the primary node for this session again
+  docker_container:
+    name: "pocphpmemcachedsessions-{{ primary_node }}"
+    state: started
+
+- name: assert that the session is empty (unfortunate expected behaviour)
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/"
+    return_content: true
+    HEADER_Cookie: "PHPSESSID={{ session_id }}"
+  register: state
+  failed_when: "'replicate-test = yeap' in state.content"

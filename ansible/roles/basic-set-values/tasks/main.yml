@@ -1,0 +1,21 @@
+---
+
+- name: start a session and set a variable
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/?initiator=php"
+    return_content: true
+  register: session_start
+
+- name: set something else in the session
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/?something=else"
+    return_content: true
+    HEADER_Cookie: "{{ session_start.set_cookie }}"
+
+- name: assert the session contains the right values
+  uri:
+    url: "http://{{ container_host }}:{{ container_port }}/"
+    return_content: true
+    HEADER_Cookie: "{{ session_start.set_cookie }}"
+  register: state
+  failed_when: "('initiator = php' not in state.content) or ('something = else' not in state.content)"

@@ -1,0 +1,26 @@
+FROM php:5.6.29-apache
+
+RUN mkdir -p /usr/local/elasticache-libmemcached/ \
+ && curl -sSL https://github.com/awslabs/aws-elasticache-cluster-client-libmemcached/archive/master.tar.gz | tar xz -C /usr/local/elasticache-libmemcached/ --strip-components=1
+
+RUN mkdir -p /usr/local/elasticache/ \
+ && curl -sSL https://github.com/awslabs/aws-elasticache-cluster-client-memcached-for-php/archive/master.tar.gz | tar xz -C /usr/local/elasticache/ --strip-components=1
+
+RUN apt-get update && apt-get install -y zlib1g-dev libevent-dev \
+    && rm -rf /var/lib/apt/lists
+
+RUN cd /usr/local/elasticache-libmemcached \
+    && ./configure \
+    && make \
+    && make install
+
+RUN cd /usr/local/elasticache \
+    && phpize \
+    && ./configure --disable-memcached-sasl \
+    && make \
+    && make install
+
+VOLUME /var/www/html
+
+COPY src/ /var/www/html/
+COPY php-memcached-opt.ini /usr/local/etc/php/conf.d/docker-php-ext-memcached.ini

@@ -1,0 +1,58 @@
+version: '2'
+services:
+  php-app-1:
+    build:
+      context: php-app/
+      dockerfile: Dockerfile-php5
+    ports:
+      - "83:80"
+    volumes:
+      - "./php-app/src/:/var/www/html"
+    depends_on:
+      - memcached-1
+      - memcached-2
+    container_name: pocphpmemcachedsessions-php-app-1
+  php-app-2:
+      build:
+        context: php-app/
+        dockerfile: Dockerfile-php7
+      ports:
+        - "84:80"
+      volumes:
+        - "./php-app/src/:/var/www/html"
+      depends_on:
+        - memcached-1
+        - memcached-2
+      container_name: pocphpmemcachedsessions-php-app-2
+  php-app-3:
+    build:
+      context: php-app/
+      dockerfile: Dockerfile-php5-amazon-elasticache
+    ports:
+      - "85:80"
+    volumes:
+      - "./php-app/src/:/var/www/html"
+    depends_on:
+      - memcached-1
+      - memcached-2
+    container_name: pocphpmemcachedsessions-php-app-3
+  php-app-4:
+    build:
+      context: php-app/
+      dockerfile: Dockerfile-php7-amazon-elasticache
+    ports:
+      - "87:80"
+    volumes:
+      - "./php-app/src/:/var/www/html"
+    depends_on:
+      - memcached-1
+      - memcached-2
+    container_name: pocphpmemcachedsessions-php-app-4
+  memcached-1:
+    image: memcached:alpine
+    command: [memcached, -vv]
+    container_name: pocphpmemcachedsessions-memcached-1
+  memcached-2:
+    image: memcached:alpine
+    command: [memcached, -vv]
+    container_name: pocphpmemcachedsessions-memcached-2

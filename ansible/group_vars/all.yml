@@ -1,0 +1,8 @@
+---
+
+php5_pecl_port: 83
+php7_pecl_port: 84
+php5_elasticache_port: 85
+php7_elasticache_port: 87
+
+container_host: "localhost"

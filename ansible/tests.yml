@@ -1,0 +1,56 @@
+---
+- name: test php5 pecl basic set values
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: basic-set-values, container_port: "{{ php5_pecl_port }}" }
+  tags: [php5, pecl, php5-pecl-basic]
+
+- name: test php7 pecl basic set values
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: basic-set-values, container_port: "{{ php7_pecl_port }}" }
+  tags: [php7, pecl, php7-pecl-basic]
+
+- name: test php5 elasticache basic set values
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: basic-set-values, container_port: "{{ php5_elasticache_port }}" }
+  tags: [php5, elasticache, php5-elasticache-basic]
+
+- name: test php7 elasticache basic set values
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: basic-set-values, container_port: "{{ php7_elasticache_port }}" }
+  tags: [php7, elasticache, php7-elasticache-basic]
+
+- name: test php5 pecl primary and replica node failure
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: single-node-failure, container_port: "{{ php5_pecl_port }}" }
+  tags: [php5, pecl, php5-pecl-node-failure]
+
+- name: test php7 pecl primary and replica node failure
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: single-node-failure, container_port: "{{ php7_pecl_port }}" }
+  tags: [php7, pecl, php7-pecl-node-failure]
+
+- name: test php5 elasticache primary and replica node failure
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: single-node-failure, container_port: "{{ php5_elasticache_port }}" }
+  tags: [php5, elasticache, php5-elasticache-node-failure]
+
+- name: test php7 elasticache primary and replica node failure
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: single-node-failure, container_port: "{{ php7_elasticache_port }}" }
+  tags: [php7, elasticache, php7-elasticache-node-failure]

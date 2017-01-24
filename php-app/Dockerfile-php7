@@ -1,0 +1,18 @@
+FROM php:7.0.14-apache
+
+RUN mkdir -p /usr/local/php-memcached/ \
+ && curl -sSL https://github.com/php-memcached-dev/php-memcached/archive/master.tar.gz | tar xz -C /usr/local/php-memcached/ --strip-components=1
+
+RUN apt-get update && apt-get install -y zlib1g-dev libmemcached-dev \
+    && rm -rf /var/lib/apt/lists
+
+RUN cd /usr/local/php-memcached \
+    && phpize \
+    && ./configure --disable-memcached-sasl \
+    && make \
+    && make install
+
+VOLUME /var/www/html
+
+COPY src/ /var/www/html/
+COPY php-memcached-opt.ini /usr/local/etc/php/conf.d/docker-php-ext-memcached.ini

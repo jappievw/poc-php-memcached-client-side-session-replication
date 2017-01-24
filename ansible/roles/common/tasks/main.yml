@@ -1,0 +1,14 @@
+---
+- name: cleanup docker-compose project
+  docker_service:
+    project_name: pocphpmemcachedsessions
+    project_src: "../."
+    state: absent
+
+- name: initialize brand new docker-compose project
+  docker_service:
+    project_name: pocphpmemcachedsessions
+    project_src: "../."
+    build: yes
+    state: present
+  register: docker_compose

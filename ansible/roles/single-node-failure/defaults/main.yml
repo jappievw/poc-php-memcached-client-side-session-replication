@@ -1,0 +1,5 @@
+---
+container_port: 80          # only used as a default
+session_id: a
+primary_node: memcached-1   # this means that this node is used for reading this specific session, when the node is available. When this node joins empty again, it means the session is lost.
+replicate_node: memcached-2 # fallback node for reading
