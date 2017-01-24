@@ -5,7 +5,7 @@
 Given we have to re-evaluate whether the sessions are going to work reliable we have to take a few things into consideration.
 
 * The Memcached daemon does not have any features to act in a highly available manner. In case the daemon gets restarted it forgets everything what was stored in there. The `libmemcached` library supports a poor man's HA option though from the clients by writing to two nodes.
-* We have to Memcached nodes.
+* We have two Memcached nodes.
 * In case we lose one node, we don't want the use of sessions in PHP to be interrupted.
 
 ## How?
